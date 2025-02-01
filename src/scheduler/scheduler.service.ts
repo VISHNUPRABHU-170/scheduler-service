@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
+import axios from 'axios';
 import { resolveCronExpression } from './utils/cron.utils';
 
 @Injectable()
@@ -100,7 +101,8 @@ export class SchedulerService {
    * @param name - Job name.
    * @param body - Job payload.
    */
-  private onJobTick(name: string, body: object): void {
+  private async onJobTick(name: string, body: object): Promise<void> {
+    await axios(body);
     this.logger.log(`Job "${name}" executed with payload: ${JSON.stringify(body)}`);
   }
 }
