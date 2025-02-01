@@ -20,7 +20,7 @@ export class SchedulerService {
    * @param schedule - Cron expression or ISO 8601 date string.
    * @param body - Payload to be passed to the job.
    */
-  scheduleJob(name: string, schedule: string, body: object): void {
+  scheduleJob(name: string, schedule: string, body: any): void {
     const cronExpression = resolveCronExpression(schedule);
     const job = new CronJob(cronExpression, () => this.onJobTick(name, body));
     this.addCronJob(name, job);
@@ -33,7 +33,7 @@ export class SchedulerService {
    * @param newCronExpression - New cron expression or ISO 8601 date string.
    * @param newBody - New payload to be passed to the job.
    */
-  updateJob(name: string, cronExpression: string, body: object): void {
+  updateJob(name: string, cronExpression: string, body: any): void {
     const existingJob = this.getCronJob(name);
     existingJob.stop();
     this.schedulerRegistry.deleteCronJob(name);
@@ -101,7 +101,7 @@ export class SchedulerService {
    * @param name - Job name.
    * @param body - Job payload.
    */
-  private async onJobTick(name: string, body: object): Promise<void> {
+  private async onJobTick(name: string, body: any): Promise<void> {
     await axios(body);
     this.logger.log(`Job "${name}" executed with payload: ${JSON.stringify(body)}`);
   }

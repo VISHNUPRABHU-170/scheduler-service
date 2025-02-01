@@ -11,7 +11,7 @@ export class ScheduleJobDto {
 
   @IsObject()
   @IsNotEmpty()
-  body: object;
+  body: any;
 }
 
 export class JobNameDto {
