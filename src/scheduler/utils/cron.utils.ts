@@ -1,4 +1,4 @@
-import * as dayjs from 'dayjs';
+import { DateTime } from 'luxon';
 import { BadRequestException } from '@nestjs/common';
 
 /**
@@ -7,8 +7,8 @@ import { BadRequestException } from '@nestjs/common';
  * @returns Cron expression string.
  */
 export function resolveCronExpression(schedule: string): string {
-  const date = dayjs(schedule);
-  if (date.isValid()) {
+  const date = DateTime.fromISO(schedule);
+  if (date.isValid) {
     if (isPastDate(date)) {
       throw new BadRequestException('Cannot schedule a job in the past');
     }
@@ -19,11 +19,11 @@ export function resolveCronExpression(schedule: string): string {
 
 /**
  * Convert a specific date/time to a cron expression.
- * @param date - Day.js object.
+ * @param date - Luxon DateTime object.
  * @returns Cron expression string.
  */
-function convertDateToCron(date: dayjs.Dayjs): string {
-  return `${date.second()} ${date.minute()} ${date.hour()} ${date.date()} ${date.month() + 1} *`;
+function convertDateToCron(date: DateTime): string {
+  return `${date.second} ${date.minute} ${date.hour} ${date.day} ${date.month} *`;
 }
 
 /**
@@ -31,6 +31,6 @@ function convertDateToCron(date: dayjs.Dayjs): string {
  * @param date - Date to check.
  * @returns boolean indicating whether the date is in the past.
  */
-function isPastDate(date: dayjs.Dayjs): boolean {
-  return date.isBefore(dayjs());
+function isPastDate(date: DateTime): boolean {
+  return date < DateTime.now();
 }
