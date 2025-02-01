@@ -9,7 +9,7 @@ import { BadRequestException } from '@nestjs/common';
 export function resolveCronExpression(schedule: string): string {
   const date = dayjs(schedule);
   if (date.isValid()) {
-    if (date.isBefore(dayjs())) {
+    if (isPastDate(date)) {
       throw new BadRequestException('Cannot schedule a job in the past');
     }
     return convertDateToCron(date);
@@ -33,13 +33,4 @@ function convertDateToCron(date: dayjs.Dayjs): string {
  */
 function isPastDate(date: dayjs.Dayjs): boolean {
   return date.isBefore(dayjs());
-}
-
-/**
- * Validates if a given schedule string is a valid ISO 8601 date string.
- * @param schedule - Date string to validate.
- * @returns boolean indicating whether the string is a valid ISO 8601 date.
- */
-function isValidISODate(schedule: string): boolean {
-  return dayjs(schedule).isValid();
 }
