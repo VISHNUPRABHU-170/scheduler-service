@@ -15,6 +15,6 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes({ path: 'api/*path', method: RequestMethod.ALL }); // Apply to all routes under /api/
+      .forRoutes('/jobs');
   }
 }

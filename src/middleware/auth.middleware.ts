@@ -8,9 +8,11 @@ export class AuthMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction) {
     const token = req.headers['access-key'];
-    if (!token) throw new UnauthorizedException('Unauthorized access');
     const accessKey = this.configService.get<string>('access_key');
-    if (token !== accessKey) throw new UnauthorizedException('Invalid token');
+    if (!token || !accessKey || token !== accessKey) {
+      throw new UnauthorizedException('Unauthorized access');
+    }
+    // If the token is valid, proceed to the next middleware or route handler
     next();
   }
 }
