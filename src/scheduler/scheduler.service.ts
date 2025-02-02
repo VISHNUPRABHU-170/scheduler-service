@@ -6,13 +6,16 @@ import {
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import axios from 'axios';
-import { resolveCronExpression } from './utils/cron.utils';
+import { SchedulerUtils } from './utils/scheduler.utils';
 
 @Injectable()
 export class SchedulerService {
   private readonly logger = new Logger(SchedulerService.name);
 
-  constructor (private schedulerRegistry: SchedulerRegistry) { }
+  constructor (
+    private schedulerRegistry: SchedulerRegistry,
+    private schedulerUtils: SchedulerUtils
+  ) { }
 
   /**
    * Add a new cron job dynamically.
@@ -21,7 +24,7 @@ export class SchedulerService {
    * @param body - Payload to be passed to the job.
    */
   scheduleJob(name: string, schedule: string, body: any): void {
-    const cronExpression = resolveCronExpression(schedule);
+    const cronExpression = this.schedulerUtils.resolveCronExpression(schedule);
     const job = new CronJob(cronExpression, () => this.onJobTick(name, body));
     this.addCronJob(name, job);
     this.logger.log(`Job "${name}" scheduled with expression "${cronExpression}"`);
